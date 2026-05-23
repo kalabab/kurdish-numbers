@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ژمارەکانی کوردی - Advanced</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #eff6ff, #f0fdf4);
+            min-height: 100vh;
+            color: #1f2937;
+        }
+
+        .header {
+            text-align: center;
+            padding: 25px 15px;
+        }
+
+        .header h1 {
+            font-size: 34px;
+            color: #111827;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #4b5563;
+            font-size: 18px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 10px;
+        }
+
+        .topbar {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            padding: 12px 22px;
+            border: none;
+            border-radius: 14px;
+            background: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.25s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 16px;
+            min-width: 120px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .stat-title {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 22px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.25s;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            border: 2px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-4px) scale(1.02);
+            border-color: #10b981;
+        }
+
+        .card-number {
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        .card-kurdish {
+            font-size: 28px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .card-latin {
+            margin-top: 8px;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .sound-btn {
+            margin-top: 15px;
+            background: #ecfdf5;
+            color: #047857;
+            border: none;
+            border-radius: 999px;
+            padding: 8px 18px;
+            font-weight: bold;
+        }
+
+        .quiz-box {
+            background: white;
+            border-radius: 24px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .quiz-word {
+            font-size: 72px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .quiz-latin {
+            font-size: 24px;
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            max-width: 450px;
+            margin: 25px auto;
+        }
+
+        .option {
+            padding: 18px;
+            border: none;
+            border-radius: 18px;
+            background: #f3f4f6;
+            font-size: 24px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .option:hover {
+            transform: scale(1.03);
+        }
+
+        .correct {
+            background: #bbf7d0 !important;
+        }
+
+        .wrong {
+            background: #fecaca !important;
+        }
+
+        .result {
+            font-size: 24px;
+            font-weight: bold;
+            min-height: 40px;
+        }
+
+        .progress-wrap {
+            width: 100%;
+            max-width: 500px;
+            margin: 20px auto;
+        }
+
+        .progress-bar {
+            height: 16px;
+            background: #e5e7eb;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #10b981, #2563eb);
+            transition: 0.3s;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media(max-width:700px) {
+            .quiz-word {
+                font-size: 52px;
+            }
+
+            .options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>ژمارەکانی کوردی سۆرانی</h1>
+
+    </div>
+
+    <div class="container">
+
+        <div class="topbar">
+            <button class="btn active" onclick="showMode('learn')">فێربوون</button>
+            <button class="btn" onclick="showMode('quiz')">تاقیکردنەوە</button>
+            <button class="btn" onclick="toggleFullscreen()">پڕشاشە</button>
+        </div>
+
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-title">خال</div>
+                <div class="stat-value" id="score">0</div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-title">وەڵامی ڕاست</div>
+                <div class="stat-value" id="correct">0</div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-title">پێشکەوتن</div>
+                <div class="stat-value" id="progressText">0%</div>
+            </div>
+        </div>
+
+        <div class="progress-wrap">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div id="learnMode">
+            <div class="grid" id="grid"></div>
+        </div>
+
+        <div id="quizMode" class="hidden">
+            <div class="quiz-box">
+
+                <div class="quiz-word" id="quizWord"></div>
+                <div class="quiz-latin" id="quizLatin"></div>
+
+                <button class="btn active" onclick="playCurrent()">
+                    🔊 لێدان صدا
+                </button>
+
+                <div class="options" id="options"></div>
+
+                <div class="result" id="result"></div>
+
+                <button class="btn" onclick="nextQuiz()">
+                    پرسیاری داهاتوو
+                </button>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const numbers = [
+            { n: 0, s: 'سفر', l: 'sifir' },
+            { n: 1, s: 'یەک', l: 'yek' },
+            { n: 2, s: 'دوو', l: 'dû' },
+            { n: 3, s: 'سێ', l: 'sê' },
+            { n: 4, s: 'چوار', l: 'çwar' },
+            { n: 5, s: 'پێنج', l: 'pênc' },
+            { n: 6, s: 'شەش', l: 'şeş' },
+            { n: 7, s: 'حەوت', l: 'hewt' },
+            { n: 8, s: 'هەشت', l: 'heşt' },
+            { n: 9, s: 'نۆ', l: 'nô' },
+            { n: 10, s: 'دە', l: 'de' },
+            { n: 20, s: 'بیست', l: 'bîst' },
+            { n: 30, s: 'سی', l: 'sî' },
+            { n: 40, s: 'چل', l: 'çil' },
+            { n: 50, s: 'پەنجا', l: 'penca' },
+            { n: 100, s: 'سەد', l: 'sed' }
+        ];
+
+        let score = 0;
+        let correct = 0;
+        let current = null;
+
+        function speak(text, slow = false) {
+            if (embeddedAudio[text]) {
+                const audio = new Audio(embeddedAudio[text]);
+                audio.play();
+                return;
+            }
+
+            speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = 'ku';
+            u.rate = slow ? 0.55 : 0.85;
+            speechSynthesis.speak(u);
+        }
+
+        const embeddedAudio = {
+            'سفر': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
+            'یەک': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
+            'دوو': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
+            'سێ': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
+            'چوار': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
+            'پێنج': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
+            'شەش': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
+            'حەوت': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
+            'هەشت': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
+            'نۆ': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
+            'دە': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
+            'بیست': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
+            'سی': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
+            'چل': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
+            'پەنجا': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
+            'سەد': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE'
+        };
+
+        function buildCards() {
+            const grid = document.getElementById('grid');
+
+            numbers.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+
+                card.innerHTML = `
+      <div class="card-number">${item.n}</div>
+      <div class="card-kurdish">${item.s}</div>
+      <div class="card-latin">${item.l}</div>
+      <button class="sound-btn">🔊 لێدان</button>
+    `;
+
+                card.onclick = () => speak(item.s);
+
+                grid.appendChild(card);
+            });
+        }
+
+        function showMode(mode) {
+            document.getElementById('learnMode').classList.toggle('hidden', mode !== 'learn');
+            document.getElementById('quizMode').classList.toggle('hidden', mode !== 'quiz');
+
+            document.querySelectorAll('.topbar .btn').forEach(b => b.classList.remove('active'));
+
+            if (mode === 'learn') {
+                document.querySelectorAll('.topbar .btn')[0].classList.add('active');
+            } else {
+                document.querySelectorAll('.topbar .btn')[1].classList.add('active');
+                nextQuiz();
+            }
+        }
+
+        function updateProgress() {
+            const p = Math.min(correct * 10, 100);
+            document.getElementById('progressFill').style.width = p + '%';
+            document.getElementById('progressText').textContent = p + '%';
+        }
+
+        function nextQuiz() {
+            current = numbers[Math.floor(Math.random() * numbers.length)];
+
+            document.getElementById('quizWord').textContent = current.s;
+            document.getElementById('quizLatin').textContent = current.l;
+            document.getElementById('result').textContent = '';
+
+            let opts = [current.n];
+
+            while (opts.length < 4) {
+                const r = numbers[Math.floor(Math.random() * numbers.length)].n;
+                if (!opts.includes(r)) opts.push(r);
+            }
+
+            opts.sort(() => Math.random() - 0.5);
+
+            const box = document.getElementById('options');
+            box.innerHTML = '';
+
+            opts.forEach(v => {
+                const btn = document.createElement('button');
+                btn.className = 'option';
+                btn.textContent = v;
+
+                btn.onclick = () => checkAnswer(v, btn);
+
+                box.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(v, btn) {
+            document.querySelectorAll('.option').forEach(b => b.disabled = true);
+
+            if (v === current.n) {
+                btn.classList.add('correct');
+                score += 10;
+                correct++;
+
+                document.getElementById('result').textContent = '✓ ئافەرین';
+
+                createConfetti();
+
+            } else {
+                btn.classList.add('wrong');
+                document.getElementById('result').textContent = '✗ هەڵە';
+            }
+
+            document.getElementById('score').textContent = score;
+            document.getElementById('correct').textContent = correct;
+
+            updateProgress();
+        }
+
+        function playCurrent() {
+            if (current) speak(current.s);
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function createConfetti() {
+            for (let i = 0; i < 20; i++) {
+                const c = document.createElement('div');
+
+                c.style.position = 'fixed';
+                c.style.width = '10px';
+                c.style.height = '10px';
+                c.style.background = Math.random() > 0.5 ? '#10b981' : '#2563eb';
+                c.style.left = Math.random() * 100 + 'vw';
+                c.style.top = '-10px';
+                c.style.borderRadius = '50%';
+                c.style.zIndex = '9999';
+                c.style.transition = '2s linear';
+
+                document.body.appendChild(c);
+
+                setTimeout(() => {
+                    c.style.top = '100vh';
+                    c.style.transform = 'rotate(720deg)';
+                }, 50);
+
+                setTimeout(() => c.remove(), 2200);
+            }
+        }
+
+        buildCards();
+    </script>
+
+</body>
+
+</html>
