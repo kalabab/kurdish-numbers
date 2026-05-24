@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ژمارەکانی کوردی - Advanced</title>
 
-    <!-- ResponsiveVoice — پخش صدا روی همه موبایل‌ها -->
+    <!-- ResponsiveVoice — پخش صدا وقتی فایل MP3 نباشد -->
     <script src="https://code.responsivevoice.org/responsivevoice.js?key=FREE"></script>
 
     <style>
@@ -331,48 +331,52 @@
         let correct = 0;
         let current = null;
 
-        function speak(text, slow = false) {
-            /* اگر فایل صوتی واقعی وجود دارد — اول آن را پخش کن */
-            if (embeddedAudio[text] && !embeddedAudio[text].includes('PUT_REAL')) {
-                const audio = new Audio(embeddedAudio[text]);
-                audio.play();
-                return;
-            }
+        // ============================================================
+        // لینک فایل‌های MP3
+        // فایل‌های صوتی را در فولدر "audio" کنار index.html بگذارید
+        // ساختار: audio/0.mp3 , audio/1.mp3 , ...
+        // اگر فایل MP3 نباشد → ResponsiveVoice پخش می‌کند
+        // ============================================================
+        const audioFiles = {
+            'سفر':   'audio/0.mp3',
+            'یەک':  'audio/1.mp3',
+            'دوو':  'audio/2.mp3',
+            'سێ':   'audio/3.mp3',
+            'چوار': 'audio/4.mp3',
+            'پێنج': 'audio/5.mp3',
+            'شەش':  'audio/6.mp3',
+            'حەوت': 'audio/7.mp3',
+            'هەشت': 'audio/8.mp3',
+            'نۆ':   'audio/9.mp3',
+            'دە':   'audio/10.mp3',
+            'بیست': 'audio/20.mp3',
+            'سی':   'audio/30.mp3',
+            'چل':   'audio/40.mp3',
+            'پەنجا':'audio/50.mp3',
+            'سەد':  'audio/100.mp3'
+        };
 
-            /* ResponsiveVoice — روی همه موبایل‌ها کار می‌کند */
-            if (typeof responsiveVoice !== 'undefined' && responsiveVoice.voiceSupport()) {
-                responsiveVoice.speak(text, 'Arabic Male', {
-                    rate: slow ? 0.55 : 0.85
+        function speak(text, slow = false) {
+            // اول فایل MP3 را امتحان کن
+            if (audioFiles[text]) {
+                const audio = new Audio(audioFiles[text]);
+                audio.play().catch(() => {
+                    // اگر فایل پیدا نشد → ResponsiveVoice
+                    playWithResponsiveVoice(text, slow);
                 });
                 return;
             }
-
-            /* fallback — Web Speech API */
-            speechSynthesis.cancel();
-            const u = new SpeechSynthesisUtterance(text);
-            u.lang = 'ar';
-            u.rate = slow ? 0.55 : 0.85;
-            speechSynthesis.speak(u);
+            // اگر لینک تعریف نشده → ResponsiveVoice
+            playWithResponsiveVoice(text, slow);
         }
 
-        const embeddedAudio = {
-            'سفر': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
-            'یەک': 'data:audio/mp3;base64,kurdish_one.mp3',
-            'دوو': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
-            'سێ': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
-            'چوار': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
-            'پێنج': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
-            'شەش': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
-            'حەوت': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
-            'هەشت': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
-            'نۆ': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
-            'دە': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
-            'بیست': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
-            'سی': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
-            'چل': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
-            'پەنجا': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE',
-            'سەد': 'data:audio/mp3;base64,PUT_REAL_AUDIO_HERE'
-        };
+        function playWithResponsiveVoice(text, slow = false) {
+            if (typeof responsiveVoice !== 'undefined') {
+                responsiveVoice.speak(text, 'Arabic Male', {
+                    rate: slow ? 0.55 : 0.85
+                });
+            }
+        }
 
         function buildCards() {
             const grid = document.getElementById('grid');
