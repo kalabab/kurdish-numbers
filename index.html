@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ژمارەکانی کوردی - Advanced</title>
 
+    <!-- ResponsiveVoice — پخش صدا روی همه موبایل‌ها -->
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=FREE"></script>
+
     <style>
         * {
             margin: 0;
@@ -329,15 +332,25 @@
         let current = null;
 
         function speak(text, slow = false) {
-            if (embeddedAudio[text]) {
+            /* اگر فایل صوتی واقعی وجود دارد — اول آن را پخش کن */
+            if (embeddedAudio[text] && !embeddedAudio[text].includes('PUT_REAL')) {
                 const audio = new Audio(embeddedAudio[text]);
                 audio.play();
                 return;
             }
 
+            /* ResponsiveVoice — روی همه موبایل‌ها کار می‌کند */
+            if (typeof responsiveVoice !== 'undefined' && responsiveVoice.voiceSupport()) {
+                responsiveVoice.speak(text, 'Arabic Male', {
+                    rate: slow ? 0.55 : 0.85
+                });
+                return;
+            }
+
+            /* fallback — Web Speech API */
             speechSynthesis.cancel();
             const u = new SpeechSynthesisUtterance(text);
-            u.lang = 'ku';
+            u.lang = 'ar';
             u.rate = slow ? 0.55 : 0.85;
             speechSynthesis.speak(u);
         }
