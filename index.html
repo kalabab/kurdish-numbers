@@ -112,15 +112,15 @@
             border-radius: 22px;
             padding: 20px;
             text-align: center;
-            cursor: pointer;
+            cursor: default;  /* کارت کلیک‌پذیر نیست */
             transition: 0.25s;
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
             border: 2px solid transparent;
         }
 
         .card:hover {
-            transform: translateY(-4px) scale(1.02);
-            border-color: #10b981;
+            transform: translateY(-2px);
+            border-color: #d1fae5;
         }
 
         .card-number {
@@ -148,6 +148,19 @@
             border-radius: 999px;
             padding: 8px 18px;
             font-weight: bold;
+            cursor: pointer;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .sound-btn:hover {
+            background: #a7f3d0;
+            transform: scale(1.05);
+        }
+
+        .sound-btn:active {
+            background: #6ee7b7;
+            transform: scale(0.97);
         }
 
         .quiz-box {
@@ -324,7 +337,13 @@
             { n: 30, s: 'سی', l: 'sî' },
             { n: 40, s: 'چل', l: 'çil' },
             { n: 50, s: 'پەنجا', l: 'penca' },
-            { n: 100, s: 'سەد', l: 'sed' }
+            { n: 60, s: 'شەست', l: 'şest' },
+            { n: 70, s: 'حەفتا', l: 'hefta' },
+            { n: 80, s: 'هەشتا', l: 'heşta' },
+            { n: 90, s: 'نەوەد', l: 'newed' },
+            { n: 100, s: 'سەد', l: 'sed' },
+            { n: 500, s: 'پێنسەد', l: 'pênsed' },
+            { n: 1000, s: 'هەزار', l: 'hezar' }
         ];
 
         let score = 0;
@@ -353,7 +372,13 @@
             'سی':   'audio/30.mp3',
             'چل':   'audio/40.mp3',
             'پەنجا':'audio/50.mp3',
-            'سەد':  'audio/100.mp3'
+            'شەست': 'audio/60.mp3',
+            'حەفتا':'audio/70.mp3',
+            'هەشتا':'audio/80.mp3',
+            'نەوەد': 'audio/90.mp3',
+            'سەد':  'audio/100.mp3',
+            'پێنسەد': 'audio/500.mp3',
+            'هەزار': 'audio/1000.mp3'
         };
 
         function speak(text, slow = false) {
@@ -389,10 +414,11 @@
       <div class="card-number">${item.n}</div>
       <div class="card-kurdish">${item.s}</div>
       <div class="card-latin">${item.l}</div>
-      <button class="sound-btn">🔊 لێدان</button>
+      <button class="sound-btn" onclick="event.stopPropagation(); speak('${item.s}')">🔊 لێدان</button>
     `;
 
-                card.onclick = () => speak(item.s);
+                // کل کارت دیگر صدا پخش نمی‌کند — فقط دکمه لێدان
+                card.onclick = null;
 
                 grid.appendChild(card);
             });
