@@ -409,6 +409,11 @@
             }
         }
 
+        // تبدیل عدد انگلیسی به ارقام کوردی-عربی
+        function toKurdishNum(n) {
+            return n.toString().replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+        }
+
         function buildCards() {
             const grid = document.getElementById('grid');
 
@@ -417,7 +422,7 @@
                 card.className = 'card';
 
                 card.innerHTML = `
-      <div class="card-number">${item.n}</div>
+      <div class="card-number">${toKurdishNum(item.n)}</div>
       <div class="card-kurdish">${item.s}</div>
       <div class="card-latin">${item.l}</div>
       <button class="sound-btn" onclick="event.stopPropagation(); speak('${item.s}')">🔊 لێدان</button>
@@ -472,7 +477,8 @@
             opts.forEach(v => {
                 const btn = document.createElement('button');
                 btn.className = 'option';
-                btn.textContent = v;
+                btn.textContent = toKurdishNum(v);
+                btn.dataset.value = v;
 
                 btn.onclick = () => checkAnswer(v, btn);
 
