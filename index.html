@@ -452,7 +452,7 @@
         function updateProgress() {
             const p = Math.min(correct * 10, 100);
             document.getElementById('progressFill').style.width = p + '%';
-            document.getElementById('progressText').textContent = p + '%';
+            document.getElementById('progressText').textContent = toKurdishNum(p) + '%';
         }
 
         function nextQuiz() {
@@ -503,8 +503,8 @@
                 document.getElementById('result').textContent = '✗ هەڵە';
             }
 
-            document.getElementById('score').textContent = score;
-            document.getElementById('correct').textContent = correct;
+            document.getElementById('score').textContent = toKurdishNum(score);
+            document.getElementById('correct').textContent = toKurdishNum(correct);
 
             updateProgress();
         }
