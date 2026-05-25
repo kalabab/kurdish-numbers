@@ -381,12 +381,18 @@
             'هەزار': 'audio/1000.mp3'
         };
 
+        // ============================================================
+        // شماره نسخه فایل‌های صوتی
+        // هر بار که فایل MP3 را در GitHub آپدیت کردید
+        // این عدد را یک واحد افزایش دهید: مثلاً 1 → 2 → 3
+        // این باعث می‌شود گوشی فایل جدید را دانلود کند
+        // ============================================================
+        const AUDIO_VERSION = 1;
+
         function speak(text, slow = false) {
-            // اول فایل MP3 را امتحان کن
             if (audioFiles[text]) {
-                const audio = new Audio(audioFiles[text]);
+                const audio = new Audio(audioFiles[text] + '?v=' + AUDIO_VERSION);
                 audio.play().catch(() => {
-                    // اگر فایل پیدا نشد → ResponsiveVoice
                     playWithResponsiveVoice(text, slow);
                 });
                 return;
